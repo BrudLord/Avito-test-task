@@ -37,7 +37,7 @@ func (s *Server) PostPullRequestMerge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if hasErr, err := s.repo.PullRequestMerge(r.Context(), &req); hasErr {
+	if hasErr, err := s.repo.PullRequestMerge(&req); hasErr {
 		if err == api.NOTFOUND {
 			writeErrorResponse(w, http.StatusNotFound, api.NOTFOUND, "resource not found")
 		}
@@ -62,7 +62,7 @@ func (s *Server) PostPullRequestReassign(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if hasErr, err := s.repo.PullRequestReassign(r.Context(), &req, &resp); hasErr {
+	if hasErr, err := s.repo.PullRequestReassign(&req, &resp); hasErr {
 		if err == api.NOTFOUND {
 			writeErrorResponse(w, http.StatusNotFound, api.NOTFOUND, "resource not found")
 		} else if err == api.PRMERGED {
@@ -91,8 +91,8 @@ func (s *Server) PostTeamAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if hasErr, err := s.repo.CreateTeam(r.Context(), &req); hasErr {
-		if err == api.NOTFOUND {
+	if hasErr, err := s.repo.CreateTeam(&req); hasErr {
+		if err == api.TEAMEXISTS {
 			writeErrorResponse(w, http.StatusBadRequest, api.TEAMEXISTS, req.TeamName+" already exists")
 		}
 		return
@@ -112,7 +112,7 @@ func (s *Server) PostTeamAdd(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetTeamGet(w http.ResponseWriter, r *http.Request, params api.GetTeamGetParams) {
 	var resp = api.Team{TeamName: params.TeamName}
 
-	if hasErr, err := s.repo.GetTeam(r.Context(), &resp); hasErr {
+	if hasErr, err := s.repo.GetTeam(&resp); hasErr {
 		if err == api.NOTFOUND {
 			writeErrorResponse(w, http.StatusBadRequest, api.NOTFOUND, "resource not found")
 		}
@@ -131,7 +131,7 @@ func (s *Server) GetTeamGet(w http.ResponseWriter, r *http.Request, params api.G
 func (s *Server) GetUsersGetReview(w http.ResponseWriter, r *http.Request, params api.GetUsersGetReviewParams) {
 	var resp = wrappers.UserPRs{ID: params.UserId}
 
-	if hasErr, _ := s.repo.UserPRs(r.Context(), &resp); hasErr {
+	if hasErr, _ := s.repo.UserPRs(&resp); hasErr {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -151,7 +151,7 @@ func (s *Server) PostUsersSetIsActive(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if hasErr, err := s.repo.UpdateUser(r.Context(), &req); hasErr {
+	if hasErr, err := s.repo.UpdateUser(&req); hasErr {
 		if err == api.NOTFOUND {
 			writeErrorResponse(w, http.StatusNotFound, api.NOTFOUND, "resource not found")
 		}
@@ -176,7 +176,7 @@ func (s *Server) PostPullRequestCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if hasErr, err := s.repo.MakePR(r.Context(), &req); hasErr {
+	if hasErr, err := s.repo.MakePR(&req); hasErr {
 		if err == api.NOTFOUND {
 			writeErrorResponse(w, http.StatusNotFound, api.NOTFOUND, "resource not found")
 		} else if err == api.PREXISTS {
