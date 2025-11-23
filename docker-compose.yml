@@ -13,6 +13,24 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: avito_server
+    depends_on:
+      - db
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: db
+      DB_PORT: 5432
+    ports:
+      - "8080:8080"
+
+
 
 volumes:
   pgdata:
