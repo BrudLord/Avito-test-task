@@ -103,10 +103,12 @@ components:
           type: string
           format: date-time
           nullable: true
+          x-omitempty: true
         mergedAt:
           type: string
           format: date-time
           nullable: true
+          x-omitempty: true
     PullRequestShort:
       type: object
       required: [ pull_request_id, pull_request_name, author_id, status]

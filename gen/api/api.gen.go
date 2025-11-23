@@ -50,8 +50,8 @@ type PullRequest struct {
 	// AssignedReviewers user_id назначенных ревьюверов (0..2)
 	AssignedReviewers []string          `json:"assigned_reviewers"`
 	AuthorId          string            `json:"author_id"`
-	CreatedAt         *time.Time        `json:"createdAt"`
-	MergedAt          *time.Time        `json:"mergedAt"`
+	CreatedAt         *time.Time        `json:"createdAt,omitempty"`
+	MergedAt          *time.Time        `json:"mergedAt,omitempty"`
 	PullRequestId     string            `json:"pull_request_id"`
 	PullRequestName   string            `json:"pull_request_name"`
 	Status            PullRequestStatus `json:"status"`
